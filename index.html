@@ -1,0 +1,39 @@
+<head>
+</head>
+<body>
+</body>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+
+<script>
+
+(function(){
+  var s1 = io("127.0.0.1:8080", {query:{ client_id:'t', channel:'1'}});
+  var s2 = io("127.0.0.1:8080", {query:{ client_id:'t', channel:'2'}});
+
+  s1.on('connect', () => { 
+ 	  s1.emit('join');     
+  })
+
+  s2.on('connect', () => { 
+	  s2.emit('join');     
+  })
+
+  s1.on('subscribe', (msg)=>{console.log(msg)});
+  s2.on('subscribe', (msg)=>{console.log(msg)});
+  var s1_count = 0;
+  var s2_count = 0;
+
+  setInterval(() => {
+	s1_count +=1;
+	s1.emit('publish', 's1 count '+ s1_count)
+  },3000);
+
+  setInterval(() => {
+	s2_count +=1;
+	s2.emit('publish', 's2 count '+ s2_count)
+  },7000);
+
+})()
+
+</script>
+
